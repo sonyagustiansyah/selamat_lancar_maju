@@ -41,21 +41,22 @@ if (isset($_POST['submit'])) {
     }
 
     if(empty($error) && $tanggal && $nama_toko){
-      $stmt = $conn->prepare("INSERT INTO timestamp 
-          (tanggal, nama_toko, nama_pic, alamat, area, kode, tujuan, result, brand, qty, keterangan, foto, inputer)
-          VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)");
-      $stmt->bind_param("sssssssssssss", 
-          $tanggal, $nama_toko, $nama_pic, $alamat, $area, $kode, $tujuan, $result, $brand, $qty, $keterangan, $foto, $inputer
-      );
-      if($stmt->execute()){
-          $success = "DATA BERHASIL DISIMPAN.";
-      } else {
-          $error = "GAGAL SIMPAN DATA: ".$stmt->error;
-      }
-      $stmt->close();
-  } elseif(empty($error)) {
-      $error = "TANGGAL DAN NAMA TOKO WAJIB DIISI.";
-  }
+        $stmt = $conn->prepare("INSERT INTO timestamp 
+            (tanggal, nama_toko, nama_pic, alamat, area, kode, tujuan, result, brand, qty, keterangan, foto, inputer)
+            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)");
+        $stmt->bind_param("sssssssssssss", 
+            $tanggal, $nama_toko, $nama_pic, $alamat, $area, $kode, $tujuan, $result, $brand, $qty, $keterangan, $foto, $inputer
+        );
+        if($stmt->execute()){
+            $stmt->close();
+            header("Location: timestamp.php?success=1"); // << redirect biar ga double input
+            exit();
+        } else {
+            $error = "GAGAL SIMPAN DATA: ".$stmt->error;
+        }
+    } elseif(empty($error)) {
+        $error = "TANGGAL DAN NAMA TOKO WAJIB DIISI.";
+    }
 }
 
 // --- Pagination & Pencarian ---

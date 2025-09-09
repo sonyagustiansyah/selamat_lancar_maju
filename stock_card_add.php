@@ -1,5 +1,11 @@
 <?php
 include 'config.php';
+if (!isset($_SESSION['username'])) {
+    header("Location: login.php");
+    exit();
+}
+$username = $_SESSION['username'];
+$role     = $_SESSION['role'];
 
 $success = $error = "";
 

@@ -9,10 +9,25 @@ $role     = $_SESSION['role'];
 
 // ===== Export Excel =====
 if (isset($_GET['export']) && $_GET['export'] == "excel") {
+    $search = isset($_GET['search']) ? $conn->real_escape_string($_GET['search']) : '';
+    $where = "";
+    if ($search) {
+        $where = "WHERE DATE_FORMAT(tanggal, '%Y/%m/%d') LIKE '%$search%'
+                  OR nama_sales LIKE '%$search%'
+                  OR nama_toko LIKE '%$search%'
+                  OR nama_pic LIKE '%$search%'
+                  OR alamat LIKE '%$search%'
+                  OR area LIKE '%$search%'
+                  OR kode LIKE '%$search%'
+                  OR DATE_FORMAT(tanggal_kirim, '%Y/%m/%d') LIKE '%$search%'
+                  OR DATE_FORMAT(ar_deadline, '%Y/%m/%d') LIKE '%$search%'";
+    }
+
     header("Content-Type: application/vnd.ms-excel");
     header("Content-Disposition: attachment; filename=purchase_orders.xls");
-    echo "<table border='1'>";
-    echo "<tr>
+
+    echo "<table border='1'>
+          <tr>
             <th>NO</th><th>TANGGAL</th><th>NAMA SALES</th><th>NAMA TOKO</th>
             <th>NAMA PIC</th><th>ALAMAT</th><th>AREA</th><th>KODE</th>
             <th>DISKON (%)</th><th>TOP (DAY)</th><th>QTY</th>
@@ -20,7 +35,7 @@ if (isset($_GET['export']) && $_GET['export'] == "excel") {
             <th>KETERANGAN</th><th>INPUTER</th>
           </tr>";
 
-    $result = $conn->query("SELECT * FROM purchase_orders ORDER BY id DESC");
+    $result = $conn->query("SELECT * FROM purchase_orders $where ORDER BY id ASC");
     $no = 1;
     while ($row = $result->fetch_assoc()) {
         echo "<tr>
@@ -228,7 +243,7 @@ $data = $conn->query("SELECT * FROM purchase_orders $where ORDER BY id ASC LIMIT
         </div>
     </form>
     <div class="mb-3">
-        <a href="purchase_order.php?export=excel" class="btn btn-success">EXPORT EXCEL</a>
+        <a href="purchase_order.php?export=excel<?= ($search ? '&search='.urlencode($search) : '') ?>" class="btn btn-success">EXPORT EXCEL</a>
     </div>
 
     <div class="table-responsive">

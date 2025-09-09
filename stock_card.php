@@ -20,7 +20,7 @@ if(isset($_GET['export']) && $_GET['export']=='excel'){
     $search = isset($_GET['search']) ? $conn->real_escape_string($_GET['search']) : '';
     $where = $search ? "WHERE kode LIKE '%$search%' OR nomor_oem LIKE '%$search%' OR brand LIKE '%$search%' OR nama_mobil LIKE '%$search%' OR posisi LIKE '%$search%' OR produk LIKE '%$search%' OR keterangan LIKE '%$search%' OR inputer LIKE '%$search%'" : '';
 
-    $result = $conn->query("SELECT * FROM stock_card $where ORDER BY id DESC");
+    $result = $conn->query("SELECT * FROM stock_card $where ORDER BY id ASC");
     $no = 1;
     while($row = $result->fetch_assoc()){
         echo "<tr>
